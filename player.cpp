@@ -10,6 +10,12 @@ using namespace std;
 Player::Player(Side side) {
     // Will be set to true in test_minimax.cpp.
     testingMinimax = false;
+
+    board = new Board();
+    mside = side;
+    other = (side == BLACK) ? WHITE : BLACK;
+
+
 }
 
 /*
@@ -32,14 +38,34 @@ Player::~Player() {
  * return nullptr.
  */
 Move *Player::doMove(Move *opponentsMove, int msLeft) {
-	Vector<int> v;
 	
     /*
      * TODO: Implement how moves your AI should play here. You should first
      * process the opponent's opponents move before calculating your own move
      */
+    board->doMove(opponentsMove, other);
 
-    // pls
+    /*if (board->hasMoves(mside) == false)
+    {
+        return nullptr;
+    }
+    */
 
-    return nullptr;
+    /*else
+    {
+        for (int i = 0; i < 8; ++i)
+        {
+            for (int j = 0; j < 8; ++j)
+            {
+                Move *move = new Move(i, j);
+                if (board->checkMove(move, mside) == true)
+                {
+                    return move;
+                }
+            }
+        }
+    }
+    */
+    Move *move = new Move(4,2);
+    return move;
 }
