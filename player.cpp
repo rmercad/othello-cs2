@@ -46,3 +46,5 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      */
     return nullptr;
 }
+
+// Hello my name is zhong
