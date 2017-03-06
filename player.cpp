@@ -10,8 +10,6 @@ using namespace std;
 Player::Player(Side side) {
     // Will be set to true in test_minimax.cpp.
     testingMinimax = false;
-
-    Board board;
 }
 
 /*
