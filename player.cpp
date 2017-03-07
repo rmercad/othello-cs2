@@ -1,6 +1,4 @@
 #include "player.hpp"
-#include <vector>
-using namespace std;
 
 /*
  * Constructor for the player; initialize everything here. The side your AI is
@@ -45,13 +43,11 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      */
     board->doMove(opponentsMove, other);
 
-    /*if (board->hasMoves(mside) == false)
+    if (board->hasMoves(mside) == false)
     {
         return nullptr;
     }
-    */
-
-    /*else
+    
     {
         for (int i = 0; i < 8; ++i)
         {
@@ -60,12 +56,10 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
                 Move *move = new Move(i, j);
                 if (board->checkMove(move, mside) == true)
                 {
+                    board->doMove(move, mside);
                     return move;
                 }
             }
         }
     }
-    */
-    Move *move = new Move(4,2);
-    return move;
 }
