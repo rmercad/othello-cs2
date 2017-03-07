@@ -15,14 +15,14 @@ Player::Player(Side side) {
 
     //list pattern (j-1)*8+i-1
 
-    weight[0][1] = -1.5;
-    weight[1][0] = -1.5;
-    weight[6][0] = -1.5;
-    weight[7][1] = -1.5;
-    weight[0][6] = -1.5;
-    weight[1][7] = -1.5;
-    weight[6][7] = -1.5;
-    weight[7][6] = -1.5;
+    weight[0][1] = -1;
+    weight[1][0] = -1;
+    weight[6][0] = -1;
+    weight[7][1] = -1;
+    weight[0][6] = -1;
+    weight[1][7] = -1;
+    weight[6][7] = -1;
+    weight[7][6] = -1;
 
 }
 
@@ -30,6 +30,27 @@ Player::Player(Side side) {
  * Destructor for the player.
  */
 Player::~Player() {
+}
+
+
+int Player::find_score(Board * board, int x, int y)
+{
+    int mcount;
+    int ocount;
+
+    if (mside == BLACK)
+    {
+        mcount = board->countBlack();
+        ocount = board->countWhite();
+    }
+
+    else if (mside == WHITE)
+    {
+        mcount = board->countWhite();
+        ocount = board->countBlack();
+    }
+
+    return mcount - ocount;
 }
 
 /*
@@ -53,24 +74,72 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      */
     board->doMove(opponentsMove, other);
 
+    int score_board[8][8];
+
+    int check[8][8];
+
+    for (int i = 0; i < 8; ++i)
+    {
+        for (int j = 0; j < 8; ++j)
+        {
+            score_board[i][j] = 0;
+            check[i][j] = 0;
+        }
+    }
 
     if (board->hasMoves(mside) == false)
     {
         return nullptr;
     }
     
+    
+    for (int i = 0; i < 8; ++i)
     {
-        for (int i = 0; i < 8; ++i)
+        for (int j = 0; j < 8; ++j)
         {
-            for (int j = 0; j < 8; ++j)
+            Move *move = new Move(i, j);
+            if (board->checkMove(move, mside) == true)
             {
-                Move *move = new Move(i, j);
-                if (board->checkMove(move, mside) == true)
-                {
-                    board->doMove(move, mside);
-                    return move;
-                }
+                Board * board_copy = board->copy();
+                board_copy->doMove(move, mside);
+                score_board[i][j] = find_score(board_copy, i, j);
+                check[i][j] = 1;
             }
         }
     }
+
+    for (int i = 0; i < 8; ++i)
+    {
+        for (int j = 0; j < 8; ++j)
+        {
+            if (j == 0)
+            {
+            std::cerr<<std::endl;
+            }
+            std::cerr<<score_board[i][j];
+        }
+    }
+
+    std::cerr<<std::endl;
+    
+    int max = -999999999;
+    Move *move_todo = new Move(0, 0);
+
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            if (score_board[i][j] > max && check[i][j] == 1)
+            {
+                move_todo->setX(i);
+                move_todo->setY(j);
+            }
+        }
+    }
+
+
+
+    board->doMove(move_todo, mside);
+    return move_todo;
 }
+

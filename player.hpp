@@ -16,6 +16,7 @@ public:
     int weight[8][8];
 
     Move *doMove(Move *opponentsMove, int msLeft);
+    int find_score(Board * board, int x, int y);
 
     // Flag to tell if the player is running within the test_minimax context
     bool testingMinimax;
