@@ -19,17 +19,17 @@ Player::Player(Side side) {
         {
             if ((i==0 && j==0) or (i==0 && j==7) or (i==7 && j==0) or (i==7 && j==7))
             {
-                weight[i][j] = 3;
+                weight[i][j] = 100;
             }
 
             else if ((i==1 && j ==1) or (i==1 && j==6) or (i==6 && j==1) or (i==6 && j==6))
             {
-                weight[i][j] = -3;
+                weight[i][j] = -30;
             }
 
             else if ((i==0 && 1<j && j<6) or (i==7 && 1<j && j<6) or (j==0 && 1<i && i<6) or (j==7 && 1<i && i<6))
             {
-                weight[i][j] = 2;
+                weight[i][j] = 35;
             }
             else
             {
@@ -38,14 +38,14 @@ Player::Player(Side side) {
         }
     }
 
-    weight[0][1] = -1;
-    weight[1][0] = -1;
-    weight[6][0] = -1;
-    weight[7][1] = -1;
-    weight[0][6] = -1;
-    weight[1][7] = -1;
-    weight[6][7] = -1;
-    weight[7][6] = -1;
+    weight[0][1] = -15;
+    weight[1][0] = -15;
+    weight[6][0] = -15;
+    weight[7][1] = -15;
+    weight[0][6] = -15;
+    weight[1][7] = -15;
+    weight[6][7] = -15;
+    weight[7][6] = -15;
 }
 
 /*
@@ -57,6 +57,24 @@ Player::~Player() {
 
 int Player::find_score(Board * board, int x, int y)
 {
+    int score;
+
+    for (int i = 0; i < 8; ++i)
+    {
+        for (int j = 0; j < 8; ++j)
+        {
+            if (board->get(mside, i, j))
+            {
+                score += weight[j][i];
+            }
+
+            if (board->get(other, i, j))
+            {
+                score -= weight[j][i];
+            }
+        }
+    }
+/*
     int mcount;
     int ocount;
 
@@ -72,7 +90,9 @@ int Player::find_score(Board * board, int x, int y)
         ocount = board->countBlack();
     }
 
-    return mcount - ocount;
+    return (mcount - ocount) + weight[y][x];*/
+
+    return score;
 }
 
 /*
@@ -109,12 +129,11 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
         }
     }
 
-    if (board->hasMoves(mside) == false)
+    if (board->hasMoves(mside) == false or msLeft == 0)
     {
         return nullptr;
     }
-    
-    
+        
     for (int i = 0; i < 8; ++i)
     {
         for (int j = 0; j < 8; ++j)
@@ -129,7 +148,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
             }
         }
     }
-
+/*
     for (int i = 0; i < 8; ++i)
     {
         for (int j = 0; j < 8; ++j)
@@ -142,7 +161,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
         }
     }
 
-    std::cerr<<std::endl;
+    std::cerr<<std::endl;*/
     
     int max = -999999999;
     Move *move_todo = new Move(0, 0);
@@ -155,6 +174,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
             {
                 move_todo->setX(i);
                 move_todo->setY(j);
+                max = score_board[i][j];
             }
         }
     }
