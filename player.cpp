@@ -1,4 +1,5 @@
 #include "player.hpp"
+#define DEPTH (2)
 
 /*
  * Constructor for the player; initialize everything here. The side your AI is
@@ -12,8 +13,7 @@ Player::Player(Side side) {
     board = new Board();
     mside = side;
     other = (side == BLACK) ? WHITE : BLACK;
-
-    //Weight table initialization prioritizing corners
+    
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
@@ -56,9 +56,8 @@ Player::~Player() {
 }
 
 
-int Player::find_score(Board * board, int x, int y)
+int Player::find_score(Board * board)
 {
-    //Score-based heuristic based on weights and total score of player
     int score;
 
     for (int i = 0; i < 8; ++i)
@@ -76,9 +75,7 @@ int Player::find_score(Board * board, int x, int y)
             }
         }
     }
-
-    //Alternate Heuristic left for possible future testing
-    /*
+/*
     int mcount;
     int ocount;
 
@@ -114,17 +111,16 @@ int Player::find_score(Board * board, int x, int y)
  */
 Move *Player::doMove(Move *opponentsMove, int msLeft) {
 	
-
+    /*
+     * TODO: Implement how moves your AI should play here. You should first
+     * process the opponent's opponents move before calculating your own move
+     */
     board->doMove(opponentsMove, other);
 
-    //Initialization of score board and check board
-    //Score_board keeps track of score values if a move is played
     int score_board[8][8];
 
-    //Check board keeps track of if there is a possible move in the position
     int check[8][8];
 
-    //Initialization of previously mentioned boards to 0
     for (int i = 0; i < 8; ++i)
     {
         for (int j = 0; j < 8; ++j)
@@ -134,14 +130,12 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
         }
     }
 
-    //If the player has no moves left or if time has ran out return nullptr
     if (board->hasMoves(mside) == false or msLeft == 0)
     {
         return nullptr;
     }
-        
-    //Testing of moves onto copies of the board and alloting values for the
-    //player onto the scoreboard
+    
+    
     for (int i = 0; i < 8; ++i)
     {
         for (int j = 0; j < 8; ++j)
@@ -151,14 +145,12 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
             {
                 Board * board_copy = board->copy();
                 board_copy->doMove(move, mside);
-                score_board[i][j] = find_score(board_copy, i, j);
+                score_board[i][j] = minimax(DEPTH, mside, board_copy);
                 check[i][j] = 1;
             }
         }
     }
-
-    //For future testing
-    /*
+/*
     for (int i = 0; i < 8; ++i)
     {
         for (int j = 0; j < 8; ++j)
@@ -176,7 +168,6 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     int max = -999999999;
     Move *move_todo = new Move(0, 0);
 
-    //Testing for maximum point value moves
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
@@ -196,3 +187,55 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     return move_todo;
 }
 
+
+int Player::minimax(int depth, Side player, Board* board)
+{
+    if (depth == 0 || board->hasMoves(player) == false)
+    {
+        return find_score(board);
+    }
+
+    if (player == mside)
+    {
+        int best = INT_MIN ;
+        for (int i = 0; i < 8; ++i)
+        {
+            for (int j = 0; j < 8; ++j)
+            {
+                Move *move = new Move(i, j);
+                if (board->checkMove(move, mside) == true)
+                {
+                    Board * board_copy = board->copy();
+                    board_copy->doMove(move, mside);
+                    int result = minimax(depth-1, other, board_copy);
+                    best = max(result, best);
+                }
+            }    
+        }
+
+        return best;
+    }
+
+    else
+    {
+        int best = INT_MAX;
+        for (int i = 0; i < 8; ++i)
+        {
+            for (int j = 0; j < 8; ++j)
+            {
+                Move *move = new Move(i, j);
+                if (board->checkMove(move, mside) == true)
+                {
+                    Board * board_copy = board->copy();
+                    board_copy->doMove(move, mside);
+                    int result = minimax(depth-1, mside, board_copy);
+                    best = min(result, best);
+                }
+            }    
+        }
+
+        return best;
+    }
+
+
+}
