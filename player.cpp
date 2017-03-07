@@ -13,6 +13,8 @@ Player::Player(Side side) {
     mside = side;
     other = (side == BLACK) ? WHITE : BLACK;
 
+    //list pattern (j-1)*8+i-1
+
 
 }
 
@@ -42,6 +44,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      * process the opponent's opponents move before calculating your own move
      */
     board->doMove(opponentsMove, other);
+
 
     if (board->hasMoves(mside) == false)
     {
