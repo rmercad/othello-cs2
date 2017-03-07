@@ -15,6 +15,14 @@ Player::Player(Side side) {
 
     //list pattern (j-1)*8+i-1
 
+    weight[0][1] = -1.5;
+    weight[1][0] = -1.5;
+    weight[6][0] = -1.5;
+    weight[7][1] = -1.5;
+    weight[0][6] = -1.5;
+    weight[1][7] = -1.5;
+    weight[6][7] = -1.5;
+    weight[7][6] = -1.5;
 
 }
 

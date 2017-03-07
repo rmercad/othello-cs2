@@ -13,6 +13,7 @@ public:
     Side mside;
     Side other;
     Board *board;
+    int weight[8][8];
 
     Move *doMove(Move *opponentsMove, int msLeft);
 
