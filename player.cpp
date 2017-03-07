@@ -12,8 +12,31 @@ Player::Player(Side side) {
     board = new Board();
     mside = side;
     other = (side == BLACK) ? WHITE : BLACK;
+    
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            if ((i==0 && j==0) or (i==0 && j==7) or (i==7 && j==0) or (i==7 && j==7))
+            {
+                weight[i][j] = 3;
+            }
 
-    //list pattern (j-1)*8+i-1
+            else if ((i==1 && j ==1) or (i==1 && j==6) or (i==6 && j==1) or (i==6 && j==6))
+            {
+                weight[i][j] = -3;
+            }
+
+            else if ((i==0 && 1<j && j<6) or (i==7 && 1<j && j<6) or (j==0 && 1<i && i<6) or (j==7 && 1<i && i<6))
+            {
+                weight[i][j] = 2;
+            }
+            else
+            {
+                weight[i][j] = 1;
+            }
+        }
+    }
 
     weight[0][1] = -1;
     weight[1][0] = -1;
@@ -23,7 +46,6 @@ Player::Player(Side side) {
     weight[1][7] = -1;
     weight[6][7] = -1;
     weight[7][6] = -1;
-
 }
 
 /*
