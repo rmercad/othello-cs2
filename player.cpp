@@ -12,11 +12,6 @@ Player::Player(Side side) {
     board = new Board();
     mside = side;
     other = (side == BLACK) ? WHITE : BLACK;
-
-    //list pattern (j-1)*8+i-1
-
-
-
     
     for (int i = 0; i < 8; i++)
     {
