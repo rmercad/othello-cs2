@@ -58,8 +58,10 @@ Player::~Player() {
 
 int Player::find_score(Board * board)
 {
+    if (testingMinimax == false)
+    {
     int score;
-
+    
     for (int i = 0; i < 8; ++i)
     {
         for (int j = 0; j < 8; ++j)
@@ -75,7 +77,11 @@ int Player::find_score(Board * board)
             }
         }
     }
-/*
+    return score;
+    }
+
+    else
+    {
     int mcount;
     int ocount;
 
@@ -91,9 +97,10 @@ int Player::find_score(Board * board)
         ocount = board->countBlack();
     }
 
-    return (mcount - ocount) + weight[y][x];*/
+    return (mcount - ocount);
+    }
 
-    return score;
+    
 }
 
 /*
@@ -111,10 +118,6 @@ int Player::find_score(Board * board)
  */
 Move *Player::doMove(Move *opponentsMove, int msLeft) {
 	
-    /*
-     * TODO: Implement how moves your AI should play here. You should first
-     * process the opponent's opponents move before calculating your own move
-     */
     board->doMove(opponentsMove, other);
 
     int score_board[8][8];
