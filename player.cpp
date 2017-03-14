@@ -58,7 +58,7 @@ Player::~Player() {
 
 int Player::find_score(Board * board)
 {
-    if (testingMinimax == false)
+    if (testingMinimax == true)
     {
     int score;
     
@@ -79,8 +79,26 @@ int Player::find_score(Board * board)
     }
     return score;
     }
+    
 
     else
+    {
+        int score = 0;
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                Move *move = new Move(i, j);
+                if (board->checkMove(move, other))
+                {
+                    score -= 1;
+                }
+            }
+        }
+        return score;
+    }
+
+    /*else
     {
     int mcount;
     int ocount;
@@ -98,7 +116,7 @@ int Player::find_score(Board * board)
     }
 
     return (mcount - ocount);
-    }
+    }*/
 
     
 }
@@ -139,16 +157,17 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     }
     
     
-    for (int i = 0; i < 8; ++i)
+    for (int i = 0; i < 8; i++)
     {
-        for (int j = 0; j < 8; ++j)
+        for (int j = 0; j < 8; j++)
         {
             Move *move = new Move(i, j);
             if (board->checkMove(move, mside) == true)
             {
                 Board * board_copy = board->copy();
                 board_copy->doMove(move, mside);
-                score_board[i][j] = minimax(DEPTH, mside, board_copy);
+                score_board[i][j] = find_score(board_copy);
+                //score_board[i][j] = minimax(DEPTH, mside, board_copy);
                 check[i][j] = 1;
             }
         }
